@@ -35,4 +35,10 @@ public class GraphServiceImpl extends GenericServiceImpl<Graph, JpaRepository<Gr
 		}).collect(Collectors.toList());
 		return newNodes;
 	}
+
+	@Override
+	public Graph findById(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

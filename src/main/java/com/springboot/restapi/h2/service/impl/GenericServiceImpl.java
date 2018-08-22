@@ -7,10 +7,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.springboot.restapi.h2.service.GenericService;
 
+import lombok.Getter;
+
 public class GenericServiceImpl<T,R extends JpaRepository<T,Long>> implements GenericService<T>{
 
 	@Autowired
-	private R r;
+	@Getter private R r;
+	
 	@Override
 	public T save(T t) {
 		return r.save(t);

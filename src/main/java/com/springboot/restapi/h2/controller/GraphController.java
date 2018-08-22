@@ -20,7 +20,7 @@ import com.springboot.restapi.h2.model.Graph;
 import com.springboot.restapi.h2.service.GraphService;
 
 @RestController
-@RequestMapping("graphs")
+@RequestMapping("graph")
 public class GraphController {
 
 	@Autowired
@@ -35,6 +35,10 @@ public class GraphController {
 	@GetMapping
 	public ResponseEntity<List<Graph>> findAll(){
 		return new ResponseEntity<List<Graph>>(graphService.findAll(), HttpStatus.OK);
+	}
+	@GetMapping("{id}")
+	public ResponseEntity<Graph> findById(@PathVariable("id") Long id){
+		return new ResponseEntity<Graph>(graphService.findById(id), HttpStatus.OK);
 	}
 	
 	@DeleteMapping("{id}")
