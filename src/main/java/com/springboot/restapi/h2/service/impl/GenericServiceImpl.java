@@ -12,21 +12,23 @@ import lombok.Getter;
 public class GenericServiceImpl<T,R extends JpaRepository<T,Long>> implements GenericService<T>{
 
 	@Autowired
-	@Getter private R r;
+	@Getter private R reporsitory;
 	
 	@Override
 	public T save(T t) {
-		return r.save(t);
+		return reporsitory.save(t);
 	}
 
 	@Override
 	public List<T> findAll() {
-		return r.findAll();
+		return reporsitory.findAll();
 	}
 
 	@Override
 	public void delete(Long id) {
-		r.delete(id);
+		reporsitory.delete(id);
 	}
+	
+	
 
 }

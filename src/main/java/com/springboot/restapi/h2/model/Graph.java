@@ -25,6 +25,10 @@ public class Graph implements Serializable{
 	
 	public Graph() {
 	}
+	
+	public Graph(Long id) {
+		this.id = id;
+	}
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)	
