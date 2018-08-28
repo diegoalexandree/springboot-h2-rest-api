@@ -14,14 +14,14 @@ import lombok.Setter;
 
 @Entity
 
-public class Node implements Serializable{
+public class DataGraph implements Serializable{
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1950205583473889738L;
 	
-	public Node() {
+	public DataGraph() {
 		
 	}
 

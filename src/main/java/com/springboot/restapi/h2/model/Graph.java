@@ -35,7 +35,7 @@ public class Graph implements Serializable{
 	private Long id;
 	
 	@OneToMany(mappedBy="graph", fetch=FetchType.LAZY)
-	private List<Node> nodes;
+	private List<DataGraph> data;
 	
 
 }

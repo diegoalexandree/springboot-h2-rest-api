@@ -10,9 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.springboot.restapi.h2.model.Graph;
-import com.springboot.restapi.h2.model.Node;
+import com.springboot.restapi.h2.model.DataGraph;
 import com.springboot.restapi.h2.service.GraphService;
-import com.springboot.restapi.h2.service.NodeService;
+import com.springboot.restapi.h2.service.DataGraphService;
 import com.springboot.restapi.hr.service.impl.exception.BusinessException;
 
 import lombok.NonNull;
@@ -22,19 +22,19 @@ import lombok.NonNull;
 public class GraphServiceImpl extends GenericServiceImpl<Graph, JpaRepository<Graph,Long>> implements GraphService{
 	
 	@Autowired
-	private NodeService nodeService;
+	private DataGraphService dataGraphService;
 	
 	@Override
 	public Graph save(Graph requestGraph) {
 		Graph newGraph = super.save(requestGraph);
-		newGraph.setNodes(saveNodesFirstByNewGraph(requestGraph, newGraph));
+		newGraph.setData(saveNodesFirstByNewGraph(requestGraph, newGraph));
 		return newGraph;
 	}
 
-	private List<Node> saveNodesFirstByNewGraph(Graph requestGraph, Graph managedGraph) {
-		List<Node> newNodes = requestGraph.getNodes().stream().map(node -> {
+	private List<DataGraph> saveNodesFirstByNewGraph(Graph requestGraph, Graph managedGraph) {
+		List<DataGraph> newNodes = requestGraph.getData().stream().map(node -> {
 			node.setGraph(managedGraph);
-			Node newNode = nodeService.save(node);
+			DataGraph newNode = dataGraphService.save(node);
 			newNode.setGraph(new Graph(managedGraph.getId()));
 			return newNode;
 		}).collect(Collectors.toList());
@@ -45,8 +45,8 @@ public class GraphServiceImpl extends GenericServiceImpl<Graph, JpaRepository<Gr
 	public Graph findById(@NonNull Long id) {
 				
 		Graph graph = Optional.ofNullable(getReporsitory().findOne(id))
-				       .orElseThrow(() -> new BusinessException(HttpStatus.NOT_FOUND, "Graph not found -> " + id));
-		graph.setNodes(nodeService.findByGraph(graph));
+				.orElseThrow(() -> new BusinessException(HttpStatus.NOT_FOUND, "Graph not found -> " + id));
+		graph.setData(dataGraphService.findByGraphId(graph.getId()));
 		return graph;
 	}
 }

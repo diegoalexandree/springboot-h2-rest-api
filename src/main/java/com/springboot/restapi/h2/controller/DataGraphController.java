@@ -16,25 +16,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.springboot.restapi.h2.model.Node;
-import com.springboot.restapi.h2.service.NodeService;
+import com.springboot.restapi.h2.model.DataGraph;
+import com.springboot.restapi.h2.service.DataGraphService;
 
 @RestController
 @RequestMapping("nodes")
-public class NodeController {
+public class DataGraphController {
 
 	@Autowired
-	private NodeService nodeService;
+	private DataGraphService nodeService;
 	
 	@PostMapping("/save")
 	@ResponseBody
-	public ResponseEntity<Node> save(@RequestBody @Valid Node node){
-		return new ResponseEntity<Node>(nodeService.save(node), HttpStatus.OK);
+	public ResponseEntity<DataGraph> save(@RequestBody @Valid DataGraph node){
+		return new ResponseEntity<DataGraph>(nodeService.save(node), HttpStatus.OK);
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<Node>> findAll(){
-		return new ResponseEntity<List<Node>>(nodeService.findAll(), HttpStatus.OK);
+	public ResponseEntity<List<DataGraph>> findAll(){
+		return new ResponseEntity<List<DataGraph>>(nodeService.findAll(), HttpStatus.OK);
 	}
 	
 	@DeleteMapping("{id}")

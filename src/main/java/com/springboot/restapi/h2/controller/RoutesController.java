@@ -20,34 +20,15 @@ import com.springboot.restapi.h2.model.Graph;
 import com.springboot.restapi.h2.service.GraphService;
 
 @RestController
-@RequestMapping("graph")
-public class GraphController {
+@RequestMapping("routes")
+public class RoutesController {
 
 	@Autowired
 	private GraphService graphService;
 	
-	@PostMapping
-	@ResponseBody
-	public ResponseEntity<Graph> save(@RequestBody @Valid Graph graph){
-		return new ResponseEntity<Graph>(graphService.save(graph), HttpStatus.OK);
-	}
-	
-	@GetMapping
-	public ResponseEntity<List<Graph>> findAll(){
-		return new ResponseEntity<List<Graph>>(graphService.findAll(), HttpStatus.OK);
-	}
-	@GetMapping("{id}")
-	public ResponseEntity<Graph> findById(@PathVariable("id") Long id){
-		return new ResponseEntity<Graph>(graphService.findById(id), HttpStatus.OK);
-	}
-	
-	@DeleteMapping("{id}")
-	public void delete(@PathVariable("id") Long id){
-		graphService.delete(id);
-	}
 	
 	@GetMapping("{id}")
-	public ResponseEntity<Graph> findAvailableRoutesByPairOfNodesAndMaxSteps(@PathVariable("id") Long id){
+	public ResponseEntity<Graph> findByPairOfNodesAndMaxSteps(@PathVariable("id") Long id){
 		return new ResponseEntity<Graph>(graphService.findById(id), HttpStatus.OK);
 	}
 
