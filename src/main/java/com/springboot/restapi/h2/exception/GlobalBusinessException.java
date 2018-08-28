@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.springboot.restapi.hr.service.impl.exception.BusinessException;
+import com.springboot.restapi.h2.service.impl.exception.BusinessException;
 
 @ControllerAdvice
 public class GlobalBusinessException {

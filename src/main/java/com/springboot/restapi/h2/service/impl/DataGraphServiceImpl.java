@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
-import com.springboot.restapi.h2.dto.Routes;
 import com.springboot.restapi.h2.model.DataGraph;
 import com.springboot.restapi.h2.repository.DataGraphRepository;
 import com.springboot.restapi.h2.service.DataGraphService;
@@ -23,10 +22,13 @@ public class DataGraphServiceImpl extends GenericServiceImpl<DataGraph, JpaRepos
 	}
 
 	@Override
-	public Optional<List<DataGraph>> findByRouterFilter(Routes routesFilter) {
-		
-		return Optional.ofNullable(dataGraphRepository.findByGraphIdAndSourceAndTarget(routesFilter.getGraphId(),
-				routesFilter.getSourceTown(), routesFilter.getTargetTown()));
+	public Optional<List<DataGraph>> findByGraphIdAndSource(Long graphId, String source) {
+		return Optional.ofNullable(dataGraphRepository.findByGraphIdAndSource(graphId,source));
+	}
+
+	@Override
+	public Optional<List<DataGraph>> findByGraphIdAndTagert(Long graphId, String target) {
+		return Optional.ofNullable(dataGraphRepository.findByGraphIdAndTarget(graphId,target));
 	}
 
 }

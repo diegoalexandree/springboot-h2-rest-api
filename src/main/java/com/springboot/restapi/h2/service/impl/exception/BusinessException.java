@@ -1,4 +1,4 @@
-package com.springboot.restapi.hr.service.impl.exception;
+package com.springboot.restapi.h2.service.impl.exception;
 
 import org.springframework.http.HttpStatus;
 

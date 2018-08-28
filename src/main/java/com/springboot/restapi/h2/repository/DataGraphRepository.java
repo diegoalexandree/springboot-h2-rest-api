@@ -14,6 +14,9 @@ public interface DataGraphRepository  extends JpaRepository<DataGraph, Long>{
 	@Query("FROM DataGraph AS dg WHERE dg.graph.id = ?1")   
 	List<DataGraph> findByGraphId(Long id);
 	
-	@Query("FROM DataGraph AS dg WHERE dg.graph.id = ?1 and dg.source = ?2 and dg.target = ?3")
-	List<DataGraph> findByGraphIdAndSourceAndTarget(Long id, String source, String target);
+	@Query("FROM DataGraph AS dg WHERE dg.graph.id = ?1 and dg.target = ?2")
+	List<DataGraph> findByGraphIdAndTarget(Long id, String target);
+
+	@Query("FROM DataGraph AS dg WHERE dg.graph.id = ?1 and dg.source = ?2")
+	List<DataGraph> findByGraphIdAndSource(Long graphId, String source);
 }

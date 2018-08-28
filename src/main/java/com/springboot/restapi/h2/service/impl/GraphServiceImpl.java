@@ -9,11 +9,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.springboot.restapi.h2.model.Graph;
 import com.springboot.restapi.h2.model.DataGraph;
-import com.springboot.restapi.h2.service.GraphService;
+import com.springboot.restapi.h2.model.Graph;
 import com.springboot.restapi.h2.service.DataGraphService;
-import com.springboot.restapi.hr.service.impl.exception.BusinessException;
+import com.springboot.restapi.h2.service.GraphService;
+import com.springboot.restapi.h2.service.impl.exception.BusinessException;
 
 import lombok.NonNull;
 
@@ -32,13 +32,13 @@ public class GraphServiceImpl extends GenericServiceImpl<Graph, JpaRepository<Gr
 	}
 
 	private List<DataGraph> saveNodesFirstByNewGraph(Graph requestGraph, Graph managedGraph) {
-		List<DataGraph> newNodes = requestGraph.getData().stream().map(node -> {
-			node.setGraph(managedGraph);
-			DataGraph newNode = dataGraphService.save(node);
-			newNode.setGraph(new Graph(managedGraph.getId()));
-			return newNode;
+		List<DataGraph> newDatasGraph = requestGraph.getData().stream().map(data -> {
+			data.setGraph(managedGraph);
+			DataGraph newDataGraph = dataGraphService.save(data);
+			newDataGraph.setGraph(new Graph(managedGraph.getId()));
+			return newDataGraph;
 		}).collect(Collectors.toList());
-		return newNodes;
+		return newDatasGraph;
 	}
 
 	@Override
