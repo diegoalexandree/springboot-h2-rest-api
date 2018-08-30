@@ -11,6 +11,8 @@ public interface DataGraphService extends GenericService<DataGraph>{
 
 	Optional<List<DataGraph>> findByGraphIdAndSource(Long graphId, String source);
 	
+	Optional<List<DataGraph>> findByGraphIdAndSourceAndTargetNotEqualsThan(Long graphId, String source, String target);
+	
 	Optional<List<DataGraph>> findByGraphIdAndTagert(Long graphId, String target);
 
 }

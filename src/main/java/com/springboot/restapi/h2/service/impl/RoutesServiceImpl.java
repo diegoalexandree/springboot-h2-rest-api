@@ -25,29 +25,66 @@ public class RoutesServiceImpl implements RoutesService{
 	public List<Routes> getRoutesByFilters(Routes routesFilter) {
 		List<Routes> routes = new ArrayList<>();
 		List<DataGraph> sourceDatas = dataGraphService
-				.findByGraphIdAndSource(routesFilter.getGraphId(), routesFilter.getSourceTown()).orElseThrow(() -> 
-					new BusinessException(HttpStatus.NOT_FOUND, "Source not found in that graph. ")
-				);
-
-		List<DataGraph> targetDatas = dataGraphService
-				.findByGraphIdAndSource(routesFilter.getGraphId(), routesFilter.getSourceTown()).orElseThrow(() -> 
-					new BusinessException(HttpStatus.NOT_FOUND, "Target not found in that graph. ")
-				 );
+				.findByGraphIdAndSource(routesFilter.getGraphId(), routesFilter.getSourceTown())
+				.orElseThrow(() -> new BusinessException(HttpStatus.NOT_FOUND, "Source not found in that graph. "));
 		
 		sourceDatas.forEach(data -> {
+			
 			if(data.getTarget().equals(routesFilter.getTargetTown())){
 				String route = data.getSource() + data.getTarget();
-				routes.add(Routes.builder().route(route).stops(route.length()).build());
+				if(routesFilter.getStops() >= (route.length() - 1) ) {
+					routes.add(Routes.builder().route(route).stops(route.length() - 1).build());
+				}
+				
 			} else {
-				//String route = data.getTarget();
-				targetDatas.forEach(targetData ->{
-					if(!targetData.getTarget().equals(routesFilter.getTargetTown())) {
-						
-					}
-				});
+				StringBuilder routeString = new StringBuilder(data.getSource());
+				List<DataGraph> resultDatas = dataGraphService
+						.findByGraphIdAndSourceAndTargetNotEqualsThan(routesFilter.getGraphId(), data.getTarget(),
+								data.getSource())
+						.orElse(new ArrayList<DataGraph>());
+				if (resultDatas.isEmpty())
+					return;
+				getRoutes(resultDatas,routes,routesFilter,routeString);
 			}
 		});
 		return routes;
 	}
+
+	public void getRoutes(List<DataGraph> sourceList, List<Routes> routes, Routes routesFilter, StringBuilder route) {
+		if(isValidRoute(routesFilter, route) ){
+			sourceList.forEach(data -> {
+				if(data.getTarget().equals(routesFilter.getSourceTown())) {
+					return;
+				}
+				
+				if(!route.toString().contains(data.getSource())){
+					route.append(data.getSource());
+				}
+				
+				if(data.getTarget().equals(routesFilter.getTargetTown())){
+					route.append(data.getTarget());
+					if(routesFilter.getStops() >= (route.length() - 1) ) {
+						routes.add(Routes.builder().route(route.toString()).stops(route.length() - 1).build());
+					}
+					
+				} else {				
+					List<DataGraph> sourceDatas = dataGraphService
+							.findByGraphIdAndSourceAndTargetNotEqualsThan(routesFilter.getGraphId(), data.getTarget(),
+									data.getSource())
+							.orElse(new ArrayList<DataGraph>());
+					if (sourceDatas.isEmpty())
+						return;
+					getRoutes(sourceDatas,routes,routesFilter,route);
+				}
+			});
+		}
+
+	}
+
+	private boolean isValidRoute(Routes routesFilter, StringBuilder route) {
+		return !route.toString().contains(routesFilter.getTargetTown());
+	}
+	
+	
 
 }

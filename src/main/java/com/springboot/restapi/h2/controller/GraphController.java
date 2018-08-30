@@ -46,11 +46,6 @@ public class GraphController {
 		graphService.delete(id);
 	}
 	
-	@GetMapping("{id}")
-	public ResponseEntity<Graph> findAvailableRoutesByPairOfNodesAndMaxSteps(@PathVariable("id") Long id){
-		return new ResponseEntity<Graph>(graphService.findById(id), HttpStatus.OK);
-	}
-
 
 	
 }

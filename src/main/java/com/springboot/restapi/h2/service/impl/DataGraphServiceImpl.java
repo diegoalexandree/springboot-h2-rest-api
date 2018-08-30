@@ -31,4 +31,10 @@ public class DataGraphServiceImpl extends GenericServiceImpl<DataGraph, JpaRepos
 		return Optional.ofNullable(dataGraphRepository.findByGraphIdAndTarget(graphId,target));
 	}
 
+	@Override
+	public Optional<List<DataGraph>> findByGraphIdAndSourceAndTargetNotEqualsThan(Long graphId, String source,
+			String target) {
+		return Optional.ofNullable(dataGraphRepository.findByGraphIdAndSourceAndTargetNotEqualsThan(graphId,source,target));
+	}
+
 }
