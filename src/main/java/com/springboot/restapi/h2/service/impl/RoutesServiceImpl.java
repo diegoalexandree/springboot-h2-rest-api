@@ -16,7 +16,7 @@ import com.springboot.restapi.h2.service.impl.exception.BusinessException;
 
 @Service
 public class RoutesServiceImpl implements RoutesService{
-
+ 
 	@Autowired
 	private DataGraphService dataGraphService;
 
@@ -31,10 +31,7 @@ public class RoutesServiceImpl implements RoutesService{
 		sourceDatas.forEach(data -> {
 			
 			if(data.getTarget().equals(routesFilter.getTargetTown())){
-				String route = data.getSource() + data.getTarget();
-				if(routesFilter.getStops() >= (route.length() - 1) ) {
-					routes.add(Routes.builder().route(route).stops(route.length() - 1).build());
-				}
+				addRouteHigthLevel(routesFilter, routes, data);
 				
 			} else {
 				StringBuilder routeString = new StringBuilder(data.getSource());
@@ -44,41 +41,52 @@ public class RoutesServiceImpl implements RoutesService{
 						.orElse(new ArrayList<DataGraph>());
 				if (resultDatas.isEmpty())
 					return;
-				getRoutes(resultDatas,routes,routesFilter,routeString);
+				addRouteLowLevel(resultDatas,routes,routesFilter,routeString);
 			}
 		});
 		return routes;
 	}
 
-	public void getRoutes(List<DataGraph> sourceList, List<Routes> routes, Routes routesFilter, StringBuilder route) {
-		if(isValidRoute(routesFilter, route) ){
+	private void addRouteHigthLevel(Routes routeFilters, List<Routes> routes, DataGraph data) {
+		String route = data.getSource() + data.getTarget();
+		if(routeFilters.getStops() >= (route.length() - 1) ) {
+			routes.add(Routes.builder().route(route).stops(route.length() - 1).build());
+		}
+	}
+
+	public void addRouteLowLevel(List<DataGraph> sourceList, List<Routes> routes, Routes routeFilters, StringBuilder route) {
+		if(isValidRoute(routeFilters, route) ){
 			sourceList.forEach(data -> {
-				if(data.getTarget().equals(routesFilter.getSourceTown())) {
+				if(data.getTarget().equals(routeFilters.getSourceTown())) {
 					return;
 				}
 				
-				if(!route.toString().contains(data.getSource())){
-					route.append(data.getSource());
+				if(route.toString().contains(data.getSource())){
+					return;
 				}
-				
-				if(data.getTarget().equals(routesFilter.getTargetTown())){
-					route.append(data.getTarget());
-					if(routesFilter.getStops() >= (route.length() - 1) ) {
-						routes.add(Routes.builder().route(route.toString()).stops(route.length() - 1).build());
-					}
-					
-				} else {				
-					List<DataGraph> sourceDatas = dataGraphService
-							.findByGraphIdAndSourceAndTargetNotEqualsThan(routesFilter.getGraphId(), data.getTarget(),
-									data.getSource())
-							.orElse(new ArrayList<DataGraph>());
-					if (sourceDatas.isEmpty())
-						return;
-					getRoutes(sourceDatas,routes,routesFilter,route);
-				}
+				addRoute(routes, routeFilters, route, data);
 			});
 		}
 
+	}
+
+	private void addRoute(List<Routes> routes, Routes routesFilter, StringBuilder route, DataGraph data) {
+		route.append(data.getSource());
+		if(data.getTarget().equals(routesFilter.getTargetTown())){
+			route.append(data.getTarget());
+			if(routesFilter.getStops() >= (route.length() - 1) ) {
+				routes.add(Routes.builder().route(route.toString()).stops(route.length() - 1).build());
+			}
+			
+		} else {				
+			List<DataGraph> sourceDatas = dataGraphService
+					.findByGraphIdAndSourceAndTargetNotEqualsThan(routesFilter.getGraphId(), data.getTarget(),
+							data.getSource())
+					.orElse(new ArrayList<DataGraph>());
+			if (sourceDatas.isEmpty())
+				return;
+			addRouteLowLevel(sourceDatas,routes,routesFilter,route);
+		}
 	}
 
 	private boolean isValidRoute(Routes routesFilter, StringBuilder route) {
