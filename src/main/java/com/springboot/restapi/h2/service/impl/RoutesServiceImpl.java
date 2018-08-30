@@ -22,26 +22,26 @@ public class RoutesServiceImpl implements RoutesService{
 
 
 	@Override
-	public List<Routes> getRoutesByFilters(Routes routesFilter) {
+	public List<Routes> getByFilters(Routes routeFilters) {
 		List<Routes> routes = new ArrayList<>();
 		List<DataGraph> sourceDatas = dataGraphService
-				.findByGraphIdAndSource(routesFilter.getGraphId(), routesFilter.getSourceTown())
+				.findByGraphIdAndSource(routeFilters.getGraphId(), routeFilters.getSourceTown())
 				.orElseThrow(() -> new BusinessException(HttpStatus.NOT_FOUND, "Source not found in that graph. "));
 		
 		sourceDatas.forEach(data -> {
 			
-			if(data.getTarget().equals(routesFilter.getTargetTown())){
-				addRouteHigthLevel(routesFilter, routes, data);
+			if(data.getTarget().equals(routeFilters.getTargetTown())){
+				addRouteHigthLevel(routeFilters, routes, data);
 				
 			} else {
 				StringBuilder routeString = new StringBuilder(data.getSource());
 				List<DataGraph> resultDatas = dataGraphService
-						.findByGraphIdAndSourceAndTargetNotEqualsThan(routesFilter.getGraphId(), data.getTarget(),
+						.findByGraphIdAndSourceAndTargetNotEqualsThan(routeFilters.getGraphId(), data.getTarget(),
 								data.getSource())
 						.orElse(new ArrayList<DataGraph>());
 				if (resultDatas.isEmpty())
 					return;
-				addRouteLowLevel(resultDatas,routes,routesFilter,routeString);
+				addRouteLowLevel(resultDatas,routes,routeFilters,routeString);
 			}
 		});
 		return routes;

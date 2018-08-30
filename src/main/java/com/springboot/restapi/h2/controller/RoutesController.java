@@ -26,13 +26,13 @@ public class RoutesController {
 																	 @PathVariable("sourceTown") String sourceTown,
 																	 @PathVariable("targetTown") String targetTown,
 																	 @RequestParam("maxStops") Integer maxStops){
-		Routes routeFilter = Routes.builder()
+		Routes routeFilters = Routes.builder()
 									.sourceTown(sourceTown)
 									.targetTown(targetTown)
 									.stops(maxStops)
 									.graphId(graphId)
 									.build();
-		return new ResponseEntity<List<Routes>>(routesService.getRoutesByFilters(routeFilter), HttpStatus.OK);
+		return new ResponseEntity<List<Routes>>(routesService.getByFilters(routeFilters), HttpStatus.OK);
 	}
 
 

@@ -6,7 +6,7 @@ import com.springboot.restapi.h2.dto.Routes;
 
 public interface RoutesService{
 
-	List<Routes> getRoutesByFilters(Routes routersFilter);
+	List<Routes> getByFilters(Routes routersFilter);
 
 
 }
